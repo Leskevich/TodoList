@@ -12,7 +12,7 @@ export type taskType = {
 
 function App() {
     const title = 'What to learn'
-    const [filterValue,setFilterValue]=useState('Completed')
+    const [filterValue,setFilterValue]=useState('All')
     const [tasks, setTask] = useState<Array<taskType>>([
         {id: 1, title: "html", isDone: false},
         {id: 2, title: "css", isDone: false},
