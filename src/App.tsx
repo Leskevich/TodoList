@@ -1,43 +1,58 @@
 import React, {useState} from 'react';
 import './App.css';
 import {Todolist} from "./Todolist";
+import {v1} from "uuid";
 
 
 export type taskType = {
-    id: number
+    id: string
     title: string
     isDone: boolean
 }
 
+export type filterType = 'All' | 'Active' | 'Completed'
 
 function App() {
     const title = 'What to learn'
-    const [filterValue,setFilterValue]=useState('All')
+    const [filterValue, setFilterValue] = useState<filterType>('All')
     const [tasks, setTask] = useState<Array<taskType>>([
-        {id: 1, title: "html", isDone: false},
-        {id: 2, title: "css", isDone: false},
-        {id: 3, title: "react", isDone: true},
-        {id: 4, title: "redux", isDone: false},
+        {id: v1(), title: "html", isDone: false},
+        {id: v1(), title: "css", isDone: false},
+        {id: v1(), title: "react", isDone: true},
+        {id: v1(), title: "redux", isDone: false},
     ])
 
-    const deleteTask = (id: number) => {
+    const filteredTasks = (filter: filterType) => {
+        let afterFilterTasks = tasks
+        switch (filter) {
+            case 'Active':
+                return afterFilterTasks.filter(el => el.isDone)
+            case 'Completed':
+                return afterFilterTasks.filter(el => !el.isDone)
+            default:
+                return afterFilterTasks
+        }
+
+    }
+    const deleteTask = (id: string) => {
         setTask(tasks.filter((el: taskType) => el.id !== id))
     }
-    let afterFilterTasks = tasks
-    if (filterValue === 'Active') {
-        afterFilterTasks = tasks.filter(el=>el.isDone)
+    const addTask =(title:string)=>{
+        const newTask:taskType={
+            id:v1(),
+            title:title,
+            isDone:false
+        }
+        setTask([newTask,...tasks])
     }
-    if (filterValue === 'Completed') {
-        afterFilterTasks = tasks.filter(el=>!el.isDone)
-    }
-
     return (
         <div className="App">
             <Todolist
                 title={title}
-                tasks={afterFilterTasks}
-                deleteTask={deleteTask}
+                tasks={filteredTasks(filterValue)}
                 setFilterValue={setFilterValue}
+                deleteTask={deleteTask}
+                addTask={addTask}
             />
 
         </div>
