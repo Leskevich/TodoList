@@ -1,5 +1,6 @@
 import React, {useState, KeyboardEvent, ChangeEvent} from 'react';
 import {filterType, taskType} from "./App";
+import {Button} from "./components/Button";
 
 
 type TodolistType = {
@@ -54,17 +55,18 @@ export const Todolist = ({
                     onChange={onChangeHandler}
                     value={newTitle}
                 />
-                <button
-                    onClick={addNewTask}>+
-                </button>
+                <Button name={'+'} collBack={addNewTask}/>
+                {/*<button*/}
+                {/*    onClick={addNewTask}>+*/}
+                {/*</button>*/}
             </div>
             <ul>
                 {tasksMap}
             </ul>
             <div>
-                <button onClick={() => setFilter("All")}>All</button>
-                <button onClick={() => setFilter("Active")}>Active</button>
-                <button onClick={() => setFilter("Completed")}>Completed</button>
+                <Button name={'All'} collBack={() => setFilter("All")}/>
+                <Button name={'Active'} collBack={() => setFilter("Active")}/>
+                <Button name={'Completed'} collBack={() => setFilter("Completed")}/>
             </div>
         </div>
     );
