@@ -56,9 +56,9 @@ export const Todolist = ({
                     value={newTitle}
                 />
                 <Button name={'+'} collBack={addNewTask}/>
-                {/*<button*/}
-                {/*    onClick={addNewTask}>+*/}
-                {/*</button>*/}
+                <button
+                    onClick={addNewTask}>+
+                </button>
             </div>
             <ul>
                 {tasksMap}
