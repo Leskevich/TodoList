@@ -4,26 +4,28 @@ import {Button} from "./components/Button";
 
 
 type TodolistType = {
+    id:string
     title: string
     tasks: taskType[]
     deleteTask: (id: string) => void
-    setFilterValue: (filter: filterType) => void
+    changeFilter: (id: string, filter: filterType) => void
     addTask: (title: string) => void
 }
 
 export const Todolist = ({
+    id,
                              title,
                              tasks,
                              deleteTask,
-                             setFilterValue,
+                             changeFilter,
                              addTask
                          }: TodolistType) => {
 
 
-    const onDellTask = (id:string) => {
+    const onDellTask = (id: string) => {
         deleteTask(id)
     }
-    const setFilter = (filter: filterType) => setFilterValue(filter)
+    const changeFilterHandler = (id:string ,filter: filterType) => changeFilter(id,filter)
     const addNewTask = () => {
         if (newTitle.trim() !== '') {
             addTask(newTitle.trim())
@@ -33,6 +35,7 @@ export const Todolist = ({
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             addNewTask()
+
         }
     }
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => setNewTitle(e.currentTarget.value)
@@ -55,7 +58,7 @@ export const Todolist = ({
                     onChange={onChangeHandler}
                     value={newTitle}
                 />
-                <Button name={'+'} collBack={addNewTask}/>
+
                 <button
                     onClick={addNewTask}>+
                 </button>
@@ -64,9 +67,9 @@ export const Todolist = ({
                 {tasksMap}
             </ul>
             <div>
-                <Button name={'All'} collBack={() => setFilter("All")}/>
-                <Button name={'Active'} collBack={() => setFilter("Active")}/>
-                <Button name={'Completed'} collBack={() => setFilter("Completed")}/>
+                <Button name={'All'} collBack={() => changeFilter(id,"all")}/>
+                <Button name={'Active'} collBack={() => changeFilter(id,"active")}/>
+                <Button name={'Completed'} collBack={() => changeFilter(id,"completed")}/>
             </div>
         </div>
     );
