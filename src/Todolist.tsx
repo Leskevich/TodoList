@@ -4,31 +4,35 @@ import {Button} from "./components/Button";
 
 
 type TodolistType = {
-    id:string
+    id: string
     title: string
     tasks: taskType[]
-    deleteTask: (id: string) => void
+    deleteTask: (todoId: string, id: string) => void
     changeFilter: (id: string, filter: filterType) => void
-    addTask: (title: string) => void
+    addTask: (todoId: string, title: string) => void
+    deleteTodo: (todoId: string) => void
 }
 
 export const Todolist = ({
-    id,
+                             id,
                              title,
                              tasks,
                              deleteTask,
                              changeFilter,
-                             addTask
+                             addTask,
+                             deleteTodo
                          }: TodolistType) => {
+    let [newTitle, setNewTitle] = useState<string>('')
+    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => setNewTitle(e.currentTarget.value)
 
 
-    const onDellTask = (id: string) => {
-        deleteTask(id)
+    const onDellTask = (taskId: string) => {
+        deleteTask(id, taskId)
     }
-    const changeFilterHandler = (id:string ,filter: filterType) => changeFilter(id,filter)
+    const changeFilterHandler = (filter: filterType) => changeFilter(id, filter)
     const addNewTask = () => {
         if (newTitle.trim() !== '') {
-            addTask(newTitle.trim())
+            addTask(id, newTitle.trim())
             setNewTitle('')
         }
     }
@@ -38,8 +42,11 @@ export const Todolist = ({
 
         }
     }
-    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => setNewTitle(e.currentTarget.value)
-    let [newTitle, setNewTitle] = useState<string>('')
+    const deleteTodoHandler = () => {
+        deleteTodo(id)
+    }
+
+
     const tasksMap = tasks.map((el) => {
         return (
             <div key={el.id}>
@@ -49,9 +56,15 @@ export const Todolist = ({
             </div>
         )
     })
+
+
     return (
         <div>
-            <h3>{title}</h3>
+            <h3>
+                <button onClick={deleteTodoHandler}> x</button>
+                {title}
+
+            </h3>
             <div>
                 <input
                     onKeyPress={onKeyPressHandler}
@@ -67,9 +80,9 @@ export const Todolist = ({
                 {tasksMap}
             </ul>
             <div>
-                <Button name={'All'} collBack={() => changeFilter(id,"all")}/>
-                <Button name={'Active'} collBack={() => changeFilter(id,"active")}/>
-                <Button name={'Completed'} collBack={() => changeFilter(id,"completed")}/>
+                <Button name={'All'} collBack={() => changeFilterHandler("all")}/>
+                <Button name={'Active'} collBack={() => changeFilterHandler("active")}/>
+                <Button name={'Completed'} collBack={() => changeFilterHandler("completed")}/>
             </div>
         </div>
     );
