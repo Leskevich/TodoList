@@ -50,7 +50,6 @@ function App() {
 
     }
 
-
     const changeFilter = (id: string, filter: filterType) => {
         return setTodoLists(todoLists.map((el) => el.id === id ? {...el, filter} : el))
     }
@@ -89,7 +88,6 @@ function App() {
             />
         )
     })
-
     return (
         <div className="App">
             {mapTodo}

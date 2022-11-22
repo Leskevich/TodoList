@@ -39,7 +39,6 @@ export const Todolist = ({
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             addNewTask()
-
         }
     }
     const deleteTodoHandler = () => {
@@ -63,7 +62,6 @@ export const Todolist = ({
             <h3>
                 <button onClick={deleteTodoHandler}> x</button>
                 {title}
-
             </h3>
             <div>
                 <input
@@ -71,7 +69,6 @@ export const Todolist = ({
                     onChange={onChangeHandler}
                     value={newTitle}
                 />
-
                 <button
                     onClick={addNewTask}>+
                 </button>
