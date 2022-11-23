@@ -1,6 +1,7 @@
-import React, {useState, KeyboardEvent, ChangeEvent} from 'react';
+import React, {useState, KeyboardEvent, ChangeEvent,MouseEvent} from 'react';
 import {filterType, taskType} from "./App";
 import {Button} from "./components/Button";
+import {EditableSpan} from "./components/EditableSpan";
 
 
 type TodolistType = {
@@ -11,6 +12,9 @@ type TodolistType = {
     changeFilter: (id: string, filter: filterType) => void
     addTask: (todoId: string, title: string) => void
     deleteTodo: (todoId: string) => void
+    changeTodoTitle: (todoId: string, title: string) => void
+    changeTaskTitle: (todoId: string, taskId: string, title: string) => void
+    changeStatusTask: (todoId: string, taskId: string, isDone: boolean) => void
 }
 
 export const Todolist = ({
@@ -20,7 +24,10 @@ export const Todolist = ({
                              deleteTask,
                              changeFilter,
                              addTask,
-                             deleteTodo
+                             deleteTodo,
+                             changeTodoTitle,
+                             changeTaskTitle,
+                             changeStatusTask
                          }: TodolistType) => {
     let [newTitle, setNewTitle] = useState<string>('')
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => setNewTitle(e.currentTarget.value)
@@ -44,14 +51,22 @@ export const Todolist = ({
     const deleteTodoHandler = () => {
         deleteTodo(id)
     }
+    const changeTaskTitleHandler = (taskId: string, title: string) => {
+        changeTaskTitle(id, taskId, title)
+    }
+    const changeStatusTaskHandler = (e:MouseEvent<HTMLInputElement>,taskId:string) => {
+        changeStatusTask(id,taskId,e.currentTarget.checked)
+    }
 
 
     const tasksMap = tasks.map((el) => {
         return (
             <div key={el.id}>
                 <button onClick={() => onDellTask(el.id)}>x</button>
-                <input type="checkbox" checked={el.isDone}/>
-                <span>{el.title}</span>
+                <input type="checkbox" checked={el.isDone} onClick={(e)=>changeStatusTaskHandler(e,el.id)}/>
+                <EditableSpan oldTitle={el.title} callback={(title: string) => {
+                    changeTaskTitleHandler(el.id, title)
+                }}/>
             </div>
         )
     })
@@ -59,9 +74,13 @@ export const Todolist = ({
 
     return (
         <div>
+
             <h3>
+
                 <button onClick={deleteTodoHandler}> x</button>
-                {title}
+                <EditableSpan oldTitle={title} callback={(title: string) => {
+                    changeTodoTitle(id, title)
+                }}/>
             </h3>
             <div>
                 <input

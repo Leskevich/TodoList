@@ -43,15 +43,22 @@ function App() {
             {id: v1(), title: "GraphQL2", isDone: false},
         ]
     });
-
+//todo
+    const changeTodoTitle = (todoId: string, title: string) => {
+        setTodoLists(todoLists.map(el => el.id === todoId ? {...el, title} : el))
+    }
     const deleteTodo = (todoId: string) => {
         setTodoLists(todoLists.filter(el => el.id !== todoId))
         delete tasks[todoId]
 
     }
-
     const changeFilter = (id: string, filter: filterType) => {
         return setTodoLists(todoLists.map((el) => el.id === id ? {...el, filter} : el))
+    }
+
+//task
+    const changeTaskTitle = (todoId: string, taskId: string, title: string) => {
+        setTasks({...tasks, [todoId]: tasks[todoId].map(e => e.id === taskId ? {...e, title} : e)})
     }
     const filteredTasks = (id: string, filter: filterType) => {
         switch (filter) {
@@ -74,6 +81,11 @@ function App() {
         }
         setTasks({...tasks, [todoId]: [newTask, ...tasks[todoId]]})
     }
+    const changeStatusTask = (todoId: string, taskId: string, isDone: boolean) => {
+        setTasks({...tasks, [todoId]: tasks[todoId].map(e => e.id === taskId ? {...e, isDone} : e)})
+    }
+
+
     const mapTodo = todoLists.map((el) => {
         return (
             <Todolist
@@ -85,6 +97,9 @@ function App() {
                 addTask={addTask}
                 changeFilter={changeFilter}
                 deleteTodo={deleteTodo}
+                changeTodoTitle={changeTodoTitle}
+                changeTaskTitle={changeTaskTitle}
+                changeStatusTask={changeStatusTask}
             />
         )
     })
