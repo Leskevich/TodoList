@@ -1,5 +1,6 @@
 import {v1} from "uuid";
 
+
 export type filterType = 'all' | 'active' | 'completed'
 export type TodolistType = {
     id: string
@@ -8,8 +9,8 @@ export type TodolistType = {
 }
 
 const initialState: TodolistType[] = [
-    {id: v1(), title: 'What to learn', filter: 'all'},
-    {id: v1(), title: 'What to buy', filter: 'all'},
+    {id: '1', title: 'What to learn', filter: 'all'},
+    {id: '2', title: 'What to buy', filter: 'all'},
 ]
 
 export const todolistReducer = (state: TodolistType[] = initialState, action: ActionTypeTodo): TodolistType[] => {

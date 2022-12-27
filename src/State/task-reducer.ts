@@ -2,8 +2,7 @@ import {v1} from "uuid";
 import {AddTodolistAC, RemoveTodolistAC} from "./todolist-reducer";
 
 
-let todolistID1 = v1();
-let todolistID2 = v1();
+
 export type taskType = {
     id: string
     title: string
@@ -13,17 +12,18 @@ export type TasksStateType = {
     [key: string]: Array<taskType>
 }
 const initialState: TasksStateType = {
-    [todolistID1]: [
+    ['1']: [
         {id: v1(), title: "HTML&CSS", isDone: true},
         {id: v1(), title: "JS", isDone: true},
         {id: v1(), title: "ReactJS", isDone: false},
         {id: v1(), title: "Rest API", isDone: false},
     ],
-    [todolistID2]: [
+    ['2']: [
         {id: v1(), title: "HTML&CSS2", isDone: true},
         {id: v1(), title: "JS2", isDone: true},
         {id: v1(), title: "ReactJS2", isDone: false},
         {id: v1(), title: "Rest API2", isDone: false},
+        {id: v1(), title: "GraphQL2", isDone: false},
     ]
 }
 
@@ -32,7 +32,7 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
         case 'REMOVE-TASK':
             return {
                 ...state,
-                [action.payload.todoId]: state[action.payload.todoId].filter(e => e.id != action.payload.taskId)
+                [action.payload.todoId]: state[action.payload.todoId].filter(e => e.id !== action.payload.taskId)
             }
         case "ADD-TASK":
             const newTask: taskType = {
@@ -75,7 +75,7 @@ type ActionType = ReturnType<typeof removeTaskAC>
     | ReturnType<typeof RemoveTodolistAC>
 
 
-export const removeTaskAC = (todoId: string,taskId: string) => {
+export const removeTaskAC = (taskId: string,todoId: string) => {
     return {
         type: 'REMOVE-TASK',
         payload: {
@@ -84,7 +84,7 @@ export const removeTaskAC = (todoId: string,taskId: string) => {
         }
     } as const
 }
-export const addTaskAC = (title: string, todoId: string) => {
+export const addTaskAC = (todoId: string,title: string) => {
     return {
         type: 'ADD-TASK',
         payload: {

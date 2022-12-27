@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import './App.css';
-import {Todolist} from "./Todolist";
 import {v1} from "uuid";
 
 export type TodoType = {
@@ -86,20 +85,20 @@ function App() {
 
 
     const mapTodo = todoLists.map((el) => {
-        return (
-            <Todolist
-                key={el.id}
-                id={el.id}
-                title={el.title}
-                tasks={filteredTasks(el.id, el.filter)}
-                deleteTask={deleteTask}
-                addTask={addTask}
-                changeFilter={changeFilter}
-                deleteTodo={deleteTodo}
-                changeTodoTitle={changeTodoTitle}
-                changeTaskTitle={changeTaskTitle}
-                changeStatusTask={changeStatusTask}
-            />
+        return (<div></div>
+            // <Todolist
+            //     key={el.id}
+            //     idTodo={el.id}
+            //     title={el.title}
+            //     tasks={filteredTasks(el.id, el.filter)}
+            //     deleteTask={deleteTask}
+            //     addTask={addTask}
+            //     changeFilter={changeFilter}
+            //     deleteTodo={deleteTodo}
+            //     changeTodoTitle={changeTodoTitle}
+            //     changeTaskTitle={changeTaskTitle}
+            //     changeStatusTask={changeStatusTask}
+            // />
         )
     })
     return (

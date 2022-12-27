@@ -1,69 +1,66 @@
-import React, {useState, KeyboardEvent, ChangeEvent,MouseEvent} from 'react';
+import React, {ChangeEvent} from 'react';
 import {filterType, taskType} from "./App";
 import {Button} from "./components/Button";
 import {EditableSpan} from "./components/EditableSpan";
+import {useDispatch, useSelector} from "react-redux";
+import {addTaskAC, changeTaskStatusAC, changeTitleStatusAC, removeTaskAC} from "./State/task-reducer";
+import {AppRootStateType} from "./State/store";
+import {changeFilterTodoAC, changeTitleTodoAC, RemoveTodolistAC} from "./State/todolist-reducer";
+import {AddItemForm} from "./components/AddItemForm";
 
 
 type TodolistType = {
-    id: string
+    idTodo: string
     title: string
-    tasks: taskType[]
-    deleteTask: (todoId: string, id: string) => void
-    changeFilter: (id: string, filter: filterType) => void
-    addTask: (todoId: string, title: string) => void
-    deleteTodo: (todoId: string) => void
-    changeTodoTitle: (todoId: string, title: string) => void
-    changeTaskTitle: (todoId: string, taskId: string, title: string) => void
-    changeStatusTask: (todoId: string, taskId: string, isDone: boolean) => void
+    filter: filterType
 }
 
 export const Todolist = ({
-                             id,
+                             idTodo,
                              title,
-                             tasks,
-                             deleteTask,
-                             changeFilter,
-                             addTask,
-                             deleteTodo,
-                             changeTodoTitle,
-                             changeTaskTitle,
-                             changeStatusTask
+                             filter,
                          }: TodolistType) => {
-    let [newTitle, setNewTitle] = useState<string>('')
-    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => setNewTitle(e.currentTarget.value)
+    let tasks = useSelector<AppRootStateType, taskType[]>(state => state.tasks[idTodo])
+    const dispatch = useDispatch()
 
 
     const onDellTask = (taskId: string) => {
-        deleteTask(id, taskId)
+        dispatch(removeTaskAC(taskId, idTodo))
     }
-    const changeFilterHandler = (filter: filterType) => changeFilter(id, filter)
-    const addNewTask = () => {
-        if (newTitle.trim() !== '') {
-            addTask(id, newTitle.trim())
-            setNewTitle('')
-        }
+    const changeFilter = (filter: filterType) => {
+        dispatch(changeFilterTodoAC(idTodo, filter))
     }
-    const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            addNewTask()
-        }
-    }
+    const addNewTask = (title: string) => dispatch(addTaskAC(idTodo, title))
+
     const deleteTodoHandler = () => {
-        deleteTodo(id)
+        dispatch(RemoveTodolistAC(idTodo))
     }
     const changeTaskTitleHandler = (taskId: string, title: string) => {
-        changeTaskTitle(id, taskId, title)
+        dispatch(changeTitleStatusAC(taskId, title, idTodo))
+        // changeTaskTitle(id, taskId, title)
     }
-    const changeStatusTaskHandler = (e:MouseEvent<HTMLInputElement>,taskId:string) => {
-        changeStatusTask(id,taskId,e.currentTarget.checked)
+    const changeStatusTaskHandler = (e: ChangeEvent<HTMLInputElement>, taskId: string) => {
+        dispatch(changeTaskStatusAC(taskId, idTodo, e.currentTarget.checked))
     }
 
-
-    const tasksMap = tasks.map((el) => {
+    const filteredTasks = () => {
+        switch (filter) {
+            case 'active':
+                return tasks.filter(el => el.isDone)
+            case 'completed':
+                return tasks.filter(el => !el.isDone)
+            default:
+                return tasks
+        }
+    }
+    const tasksF = filteredTasks().map((el) => {
         return (
             <div key={el.id}>
                 <button onClick={() => onDellTask(el.id)}>x</button>
-                <input type="checkbox" checked={el.isDone} onClick={(e)=>changeStatusTaskHandler(e,el.id)}/>
+                <input type="checkbox"
+                       checked={el.isDone}
+                       onChange={(e) => changeStatusTaskHandler(e, el.id)}
+                />
                 <EditableSpan oldTitle={el.title} callback={(title: string) => {
                     changeTaskTitleHandler(el.id, title)
                 }}/>
@@ -74,31 +71,23 @@ export const Todolist = ({
 
     return (
         <div>
-
             <h3>
 
                 <button onClick={deleteTodoHandler}> x</button>
                 <EditableSpan oldTitle={title} callback={(title: string) => {
-                    changeTodoTitle(id, title)
+                    dispatch(changeTitleTodoAC(idTodo, title))
                 }}/>
             </h3>
             <div>
-                <input
-                    onKeyPress={onKeyPressHandler}
-                    onChange={onChangeHandler}
-                    value={newTitle}
-                />
-                <button
-                    onClick={addNewTask}>+
-                </button>
+                <AddItemForm callback={(title: string) => addNewTask(title)}/>
             </div>
             <ul>
-                {tasksMap}
+                {tasksF}
             </ul>
             <div>
-                <Button name={'All'} collBack={() => changeFilterHandler("all")}/>
-                <Button name={'Active'} collBack={() => changeFilterHandler("active")}/>
-                <Button name={'Completed'} collBack={() => changeFilterHandler("completed")}/>
+                <Button name={'All'} collBack={() => changeFilter("all")}/>
+                <Button name={'Active'} collBack={() => changeFilter("active")}/>
+                <Button name={'Completed'} collBack={() => changeFilter("completed")}/>
             </div>
         </div>
     );
