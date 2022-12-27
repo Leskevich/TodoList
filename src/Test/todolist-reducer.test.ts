@@ -1,5 +1,5 @@
 import {v1} from "uuid";
-import {AddTodolistAC, FilterValuesType, todolistReducer, TodolistType} from "../State/todolist-reducer";
+import {AddTodolistAC, filterType, todolistReducer, TodolistType} from "../State/todolist-reducer";
 
 test('correct todolist should be added', () => {
     let todolistId1 = v1();
@@ -57,14 +57,14 @@ test('correct filter of todolist should be changed', () => {
     let todolistId1 = v1();
     let todolistId2 = v1();
 
-    let newFilter: FilterValuesType = "completed";
+    let newFilter: filterType = "completed";
 
     const startState: Array<TodolistType> = [
         {id: todolistId1, title: "What to learn", filter: "all"},
         {id: todolistId2, title: "What to buy", filter: "all"}
     ]
 
-    const action:{type: 'CHANGE-TODOLIST-FILTER', id: string, filter: FilterValuesType} = {
+    const action:{type: 'CHANGE-TODOLIST-FILTER', id: string, filter: filterType} = {
         type: 'CHANGE-TODOLIST-FILTER',
         id: todolistId2,
         filter: newFilter
