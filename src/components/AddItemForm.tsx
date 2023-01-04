@@ -1,12 +1,11 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 
 type AddItemFormType = {
     callback: (title: string) => void
 }
 
-export const AddItemForm = ({callback}: AddItemFormType) => {
+export const AddItemForm = memo(({callback}: AddItemFormType) => {
     let [newTitle, setNewTitle] = useState<string>('')
-
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => setNewTitle(e.currentTarget.value)
     const clickAdd = () => {
         if (newTitle.trim() !== '') {
@@ -31,5 +30,5 @@ export const AddItemForm = ({callback}: AddItemFormType) => {
             </button>
         </div>
     );
-};
+});
 

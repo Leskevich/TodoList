@@ -1,8 +1,13 @@
 .App {
-  padding: 30px;
-  display: flex;
+    padding: 30px;
+
 }
 
 .App > div {
-  margin-right: 50px;
+    display: flex;
+}
+
+
+.Todo{
+    margin-right: 50px;
 }

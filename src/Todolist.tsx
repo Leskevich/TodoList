@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, memo, useCallback} from 'react';
 import {filterType, taskType} from "./App";
 import {Button} from "./components/Button";
 import {EditableSpan} from "./components/EditableSpan";
@@ -15,29 +15,24 @@ type TodolistType = {
     filter: filterType
 }
 
-export const Todolist = ({
-                             idTodo,
-                             title,
-                             filter,
-                         }: TodolistType) => {
+export const Todolist = memo((props: TodolistType) => {
+    let {idTodo, title, filter,} = props
     let tasks = useSelector<AppRootStateType, taskType[]>(state => state.tasks[idTodo])
     const dispatch = useDispatch()
-
 
     const onDellTask = (taskId: string) => {
         dispatch(removeTaskAC(taskId, idTodo))
     }
-    const changeFilter = (filter: filterType) => {
+    const changeFilter = useCallback((filter: filterType) => {
         dispatch(changeFilterTodoAC(idTodo, filter))
-    }
-    const addNewTask = (title: string) => dispatch(addTaskAC(idTodo, title))
+    },[dispatch])
+    const addNewTask = useCallback((title: string) => dispatch(addTaskAC(idTodo, title)), [dispatch])
 
     const deleteTodoHandler = () => {
         dispatch(RemoveTodolistAC(idTodo))
     }
     const changeTaskTitleHandler = (taskId: string, title: string) => {
         dispatch(changeTitleStatusAC(taskId, title, idTodo))
-        // changeTaskTitle(id, taskId, title)
     }
     const changeStatusTaskHandler = (e: ChangeEvent<HTMLInputElement>, taskId: string) => {
         dispatch(changeTaskStatusAC(taskId, idTodo, e.currentTarget.checked))
@@ -68,7 +63,6 @@ export const Todolist = ({
         )
     })
 
-
     return (
         <div>
             <h3>
@@ -91,5 +85,5 @@ export const Todolist = ({
             </div>
         </div>
     );
-};
+});
 
